@@ -34,6 +34,22 @@ argument like: `{5cm,28}`.
 Wrapping is specific to pdf/LaTeX output. For other formats, the tag is simply
 removed.
 
+### vertical align wrapfig with text
+
+Set the `\intextsep` globally, but only for the wrap figure environemnt and
+declare `\usepackage{wrapfig}` as usaually. In pandoc markdown this can be done
+by using the  header-includes option in the metadata header:
+
+~~~
+ header-includes:
+ - \usepackage{wrapfig}
+ - |
+     \BeforeBeginEnvironment{wrapfigure}{\setlength{\intextsep}{0pt}}
+~~~
+
+see https://tex.stackexchange.com/questions/415398/adjust-intextsep-for-wrapfigure-only
+for more options of vertical alignment with text.
+
 ### Tufte-latex margin figures
 
 For users of the [tufte-latex](https://ctan.org/pkg/tufte-latex?lang=en)
