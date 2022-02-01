@@ -18,7 +18,9 @@ wrapped. `x` is a number that specifies the width of the wrap in inches. Setting
 it to 0 will cause the width of the figure to be used (as per the wrapfig
 package instructions). Figures without the tag will float as usual. Optionally
 precede x with a character in the set {l,r,i,o} to set wrapfig's placement
-parameter; the default is 'l'. Optionally follow ?  with a '-' and another width
+parameter, or the uppercase variants {L,R,I,O} to let the image flow in the
+wrapfig box. By using the float feature images hanging over page breakes can
+be avoided. default is 'L'. . Optionally follow ?  with a '-' and another width
 specification to set wrapfig's overhang parameter and push the figure that far
 into the margin.
 

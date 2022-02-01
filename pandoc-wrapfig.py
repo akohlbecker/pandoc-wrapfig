@@ -6,8 +6,10 @@ through the wrapfig package.
 Simply add a " {?}" tag to the end of the caption for the figure, where
 ? is an integer specifying the width of the wrap in inches. 0 will cause
 the width of the figure to be used. Optionally precede ? with a
-character in the set {l,r,i,o} to set wrapfig's placement parameter; the
-default is 'l'. Optionally follow ? with a '-' and another width
+character in the set {l,r,i,o} to set wrapfig's placement parameter,
+or the uppercase variants {L,R,I,O} to let the image flow in the wrapfig box.
+By using the float feature images hanging over page brakes can be avoided.
+default is 'L'. Optionally follow ? with a '-' and another width
 specification to set wrapfig's overhang parameter and push the figure
 that far into the margin.
 
@@ -31,7 +33,8 @@ def wrapfig(key, val, fmt, meta):
             lines = FLAG_PAT.match(caption[-1]['c']).group(7)
             stripped_caption = caption[:-2]
             if fmt == 'latex':
-                raise_box = r'\raisebox{0pt}[\dimexpr\height-0.8\baselineskip\relax]{'
+                v_align_to_text_start = r'' # {%\setlength\intextsep{0pt}'
+                v_align_to_text_end = r'' # \noindent\lipsum[1]%}'
                 if where == 'm':  # produce a marginfigure
                     latex_begin = r'\begin{marginfigure}'
                     latex_end = r'}\end{marginfigure}'
@@ -46,6 +49,11 @@ def wrapfig(key, val, fmt, meta):
                         return [RawInline(fmt, latex_begin + latex_fig)] \
                                 + [RawInline(fmt, latex_end)]
                 else:  # produce a wrapfigure
+                    if where == '':
+                        # by default the wrapfig placement is 'r'., using 'R'
+                        # will yield better results in most cases since it will
+                        # allow the image to float, which avoids ugly page breaks
+                        where = 'L'
                     if len(lines) > 0:
                         latex_begin = r'\begin{wrapfigure}[' + lines \
                             + ']{%s}%s{' % (where, overhang) + size + '}'
@@ -63,8 +71,8 @@ def wrapfig(key, val, fmt, meta):
                         latex_fig = r'\centering\includegraphics{' + target[0] \
                                     + '}'
                         latex_end = r'\end{wrapfigure}'
-                        return [RawInline(fmt, latex_begin + raise_box + latex_fig + '}')] \
-                                + [RawInline(fmt, latex_end)]
+                        return [RawInline(fmt, v_align_to_text_start + latex_begin + latex_fig)] \
+                                + [RawInline(fmt, latex_end + v_align_to_text_end)]
             else:
                 return Image(attrs, stripped_caption, target)
 
